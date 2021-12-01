@@ -1,5 +1,5 @@
-// VoiceRSS Javascript SDK
-const VoiceRSS = {
+"use strict";
+var VoiceRSS = {
   speech: function (e) {
     this._validate(e), this._request(e);
   },
@@ -35,7 +35,7 @@ const VoiceRSS = {
     (t.onreadystatechange = function () {
       if (4 == t.readyState && 200 == t.status) {
         if (0 == t.responseText.indexOf("ERROR")) throw t.responseText;
-        (audioElement.src = t.responseText), audioElement.play();
+        new Audio(t.responseText).play();
       }
     }),
       t.open("POST", "https://api.voicerss.org/", !0),
@@ -54,6 +54,8 @@ const VoiceRSS = {
       (e.src || "") +
       "&hl=" +
       (e.hl || "") +
+      "&v=" +
+      (e.v || "") +
       "&r=" +
       (e.r || "") +
       "&c=" +
@@ -101,3 +103,52 @@ const VoiceRSS = {
     throw "The browser does not support HTTP request";
   },
 };
+
+const jokesApiUrl = "https://icanhazdadjoke.com/";
+
+let joke = "";
+
+const getARandomJoke = async () => {
+  try {
+    const response = await fetch(jokesApiUrl, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    const responseJson = await response.json();
+
+    joke = responseJson.joke;
+
+    displayJoke();
+    hearJoke();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const displayJoke = () => {
+  const jokeElement = document.getElementById("joke");
+  jokeElement.textContent = joke;
+};
+
+const apiKey = "f5b27fc6059e42fd90810625a8c28338";
+
+const hearJoke = async () => {
+  VoiceRSS.speech({
+    key: apiKey,
+    src: "hellooo",
+    hl: "en-us",
+    v: "Linda",
+    r: 0,
+    c: "mp3",
+    f: "44khz_16bit_stereo",
+    ssml: false,
+  });
+};
+
+const button = document.getElementById("button");
+
+button.addEventListener("click", getARandomJoke);
+
+getARandomJoke();
