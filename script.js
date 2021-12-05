@@ -1,4 +1,5 @@
-"use strict";
+let audioElement = document.getElementById("audio");
+("use strict");
 var VoiceRSS = {
   speech: function (e) {
     this._validate(e), this._request(e);
@@ -35,7 +36,8 @@ var VoiceRSS = {
     (t.onreadystatechange = function () {
       if (4 == t.readyState && 200 == t.status) {
         if (0 == t.responseText.indexOf("ERROR")) throw t.responseText;
-        new Audio(t.responseText).play();
+        audioElement.src = t.responseText;
+        audioElement.play();
       }
     }),
       t.open("POST", "https://api.voicerss.org/", !0),
@@ -120,16 +122,10 @@ const getARandomJoke = async () => {
 
     joke = responseJson.joke;
 
-    displayJoke();
     hearJoke();
   } catch (err) {
     console.log(err);
   }
-};
-
-const displayJoke = () => {
-  const jokeElement = document.getElementById("joke");
-  jokeElement.textContent = joke;
 };
 
 const apiKey = "f5b27fc6059e42fd90810625a8c28338";
@@ -137,7 +133,7 @@ const apiKey = "f5b27fc6059e42fd90810625a8c28338";
 const hearJoke = async () => {
   VoiceRSS.speech({
     key: apiKey,
-    src: "hellooo",
+    src: joke,
     hl: "en-us",
     v: "Linda",
     r: 0,
@@ -150,5 +146,3 @@ const hearJoke = async () => {
 const button = document.getElementById("button");
 
 button.addEventListener("click", getARandomJoke);
-
-getARandomJoke();
