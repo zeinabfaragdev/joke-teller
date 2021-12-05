@@ -1,4 +1,6 @@
-let audioElement = document.getElementById("audio");
+const audioElement = document.getElementById("audio");
+const button = document.getElementById("button");
+
 ("use strict");
 var VoiceRSS = {
   speech: function (e) {
@@ -121,7 +123,7 @@ const getARandomJoke = async () => {
     const responseJson = await response.json();
 
     joke = responseJson.joke;
-
+    toggleButton();
     hearJoke();
   } catch (err) {
     console.log(err);
@@ -143,6 +145,9 @@ const hearJoke = async () => {
   });
 };
 
-const button = document.getElementById("button");
+const toggleButton = () => {
+  button.disabled = !button.disabled;
+};
 
 button.addEventListener("click", getARandomJoke);
+audioElement.addEventListener("ended", toggleButton);
